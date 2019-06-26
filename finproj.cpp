@@ -831,6 +831,7 @@ case '1':
     cout<<"\n\t\t1. Add Member";
     cout<<"\n\t\t2. Display Member";
     cout<<"\n\t\t3. Delete Member";
+    cout<<"\n\t\t4. Cari Member";
     cout<<"\n\nMasukkan Pilihan : "; cin>>plh;
         switch(plh){
     case '1':
@@ -844,12 +845,17 @@ case '1':
         cout<<"\nMasukkan ID Member yg ingin di del : "; cin>>del_id;
         mo.del_mid(del_id);
         break;
+    case '4':
+        cout<<"Masukkan ID member yg ingin ditampilkan : "; cin>>cari;
+        mo.cari_member(cari);
         }
     break;
 case '2':
     cout<<"\n\t\t1. Add Menu";
     cout<<"\n\t\t2. Display Menu";
     cout<<"\n\t\t3. Delete Menu";
+    cout<<"\n\t\t4. Cari Menu";
+    cout<<"\n\t\t5. Sorting Menu Berdasarkan Jenis";
     cout<<"\n\nMasukkan Pilihan : "; cin>>plh;
         switch(plh){
      case '1':
@@ -863,7 +869,16 @@ case '2':
         cout<<"\nMasukkan ID Menu yg ingin di del : "; cin>>del_id;
         no.del_mid(del_id);
         break;
-    }
+     case '4':
+        cout<<"Masukkan ID member yg ingin ditampilkan : ";cin>>cari;
+        no.cari_menu(cari);
+        break;
+     case '5':
+        int jml_menu=no.count();
+        no.selection_sort(jml_menu);
+        cout<<"\nMenu telah diurutkan..."<<endl;
+        MenuOp::display(no.gethead());
+        }
     break;
 case '3':
     hrg_ttl=0;
