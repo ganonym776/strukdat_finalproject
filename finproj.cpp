@@ -13,7 +13,7 @@ using namespace std;
 bool get_adm;
 bool get_staff;
 int ds, dm, dn, dh,hrg_ttl;
-string *aktif, *aktif_member;
+string *aktif=NULL, *aktif_member=NULL;
 
 struct Owner{
     string nama = "Admin@Cafe_simbok.com";
@@ -500,7 +500,7 @@ public:
     int hrgt_brg = 0;
     awal=head;
     bool ketemu=0;
-    while(awal!=tail)
+    while(awal!=NULL)
     {
         if(awal->id_menu==id){
         ketemu=1;
@@ -520,35 +520,35 @@ public:
     }
     }
 
-int count ()
+int count () //fungsi untuk menghitung jumlah data di struct menu.
 {
-    Menu2 * hitung;
-    hitung = head;
+    Menu2 * hitung;  //membuat pointer baru dari struct Menu2(Menu)
+    hitung = head;  //pointer baru td diberi nilai head untuk mengambil nilai NULL
+    //kenapa tidak langsung gunakan head? karena hitung untuk menjelajah di struct. head jgn sampe nilainya berubah
     int c = 0 ;
-
     /* traverse the entire linked list */
-while ( hitung != NULL )
+while ( hitung != NULL ) //hitung = head, artinya data pertama. NULL adalah tail->next.
     {
-        hitung = hitung->next ;
-        c++ ;
+        hitung = hitung->next ;  //hitung maju 1 node,
+        c++ ;  //untuk record perulangan untuk mendapatkan jumlah node yg ada
     }
 
-    return c ;
+    return c ;  //mengembalikan nilai c berupa integer.
 }
 
-void selection_sort ( int n )
+void selection_sort ( int n ) //fungsi sorting dengan metode selection
 {
     int i, j, temp;
     string tmp;
-    Menu2 *dat_1, *dat_2 ;
+    Menu2 *dat_1, *dat_2 ; //membuat pointer struct menu2 baru
 
-    dat_1 = head ;
-    for ( i = 0 ; i < n - 1 ; i++ )
+    dat_1 = head ; //dat_1 diberikan nilai head
+    for ( i = 0 ; i < n - 1 ; i++ )  //pengulangan. n didapat dari hasil record count(). di int main() nanti ada "n = count()"
     {
-        dat_2 = dat_1->next;
-        for ( j = i + 1 ; j < n ; j++ )
+        dat_2 = dat_1->next;  //dat_2 dialamatkan sebagai node lanjutannya dari dat_1
+        for ( j = i + 1 ; j < n ; j++ ) //perulangan kedua
         {
-            if ( dat_1->jenis > dat_2->jenis )
+            if ( dat_1->jenis > dat_2->jenis ) //dibandingkan berdasarkan jenis menu.
             {
                 //menukar jenis dari menu
                 tmp = dat_1->jenis ;
@@ -564,9 +564,9 @@ void selection_sort ( int n )
                 dat_2->nama_menu = tmp ;
 
             }
-            dat_2 = dat_2 -> next ;
+            dat_2 = dat_2 -> next ; //dat_2 maju 1 node
         }
-        dat_1 = dat_1 -> next ;
+        dat_1 = dat_1 -> next ;  //dat_1 maju 1 node
     }
 }
 
@@ -633,8 +633,8 @@ void Dequeue(){
 
 void tampil(){
     if(IsEmpty()==0){
-        for(int i=story.head;i<=story.tail-1;i++){
-            cout<<story.datetime[i]<<"\t"<<story.buyer[i]<<"\t"<<story.jml_bayar<<"\t"<<story.kasir<<endl;
+        for(int i=story.head;i<=story.tail;i++){
+            cout<<story.datetime[i]<<"\t"<<story.buyer[i]<<"\t\tRp."<<story.jml_bayar[i]<<"\t"<<story.kasir[i]<<endl;
         }
 	}
 	else{
@@ -643,6 +643,13 @@ void tampil(){
 }
 
 };
+
+string getdatetime()
+{
+  time_t tt = time(NULL);
+  string s = ctime(&tt);
+  return s.substr(0, s.size()-1);
+}
 
 void header(){
     cout<<"\n=====================================================";
@@ -682,17 +689,15 @@ void login(){
 };
 
 int main(){
-    //playing date & time
-    time_t now;
-    struct tm * timeinfo;
-    char buffer[80];
+    //playing date & time func getdatetime()
+    string datenow;
     //
 
     get_adm=0;
     get_staff=0;
     char plh;
-    int del_id, cari, jmlh_pesan, total;
-    string common="???????";
+    int del_id, cari, jmlh_pesan;
+    string common;
 
     //Definisi Class
     StaffOp so;
@@ -781,7 +786,7 @@ case '3':
          MenuOp::display(no.gethead());
         break;
      case '3':
-         MenuOp::display(no.gethead());
+        MenuOp::display(no.gethead());
         cout<<"\nMasukkan ID Menu yg ingin di del : "; cin>>del_id;
         no.del_mid(del_id);
         break;
@@ -831,7 +836,6 @@ case '1':
     cout<<"\n\t\t1. Add Member";
     cout<<"\n\t\t2. Display Member";
     cout<<"\n\t\t3. Delete Member";
-    cout<<"\n\t\t4. Cari Member";
     cout<<"\n\nMasukkan Pilihan : "; cin>>plh;
         switch(plh){
     case '1':
@@ -845,17 +849,12 @@ case '1':
         cout<<"\nMasukkan ID Member yg ingin di del : "; cin>>del_id;
         mo.del_mid(del_id);
         break;
-    case '4':
-        cout<<"Masukkan ID member yg ingin ditampilkan : "; cin>>cari;
-        mo.cari_member(cari);
         }
     break;
 case '2':
     cout<<"\n\t\t1. Add Menu";
     cout<<"\n\t\t2. Display Menu";
     cout<<"\n\t\t3. Delete Menu";
-    cout<<"\n\t\t4. Cari Menu";
-    cout<<"\n\t\t5. Sorting Menu Berdasarkan Jenis";
     cout<<"\n\nMasukkan Pilihan : "; cin>>plh;
         switch(plh){
      case '1':
@@ -869,16 +868,7 @@ case '2':
         cout<<"\nMasukkan ID Menu yg ingin di del : "; cin>>del_id;
         no.del_mid(del_id);
         break;
-     case '4':
-        cout<<"Masukkan ID member yg ingin ditampilkan : ";cin>>cari;
-        no.cari_menu(cari);
-        break;
-     case '5':
-        int jml_menu=no.count();
-        no.selection_sort(jml_menu);
-        cout<<"\nMenu telah diurutkan..."<<endl;
-        MenuOp::display(no.gethead());
-        }
+    }
     break;
 case '3':
     hrg_ttl=0;
@@ -889,11 +879,13 @@ case '3':
         mo.cari_member(cari);
         cout<<"---------------------------------------------------------"<<endl<<endl;
         if(aktif_member==NULL){
-        *aktif_member = common;
+        aktif_member = &common;
+        common="???????";
         }
     }
     else{
-         *aktif_member = common;
+         aktif_member = &common;
+         common="???????";
     }
     MenuOp::display(no.gethead());
     do{
@@ -913,11 +905,10 @@ case '3':
         hrg_ttl=hrg_ttl-(hrg_ttl*10/100);
         cout<<"Harga Akhir :\t\tRp."<<hrg_ttl<<endl;
     }
-    /*time (&now);
-    timeinfo = localtime(&now);
-    strftime(buffer,sizeof(buffer),"%d-%m-%Y %H:%M:%S",timeinfo);
-    string datenow(buffer);
-    ho.Enqueue(datenow,*aktif_member,hrg_ttl,*aktif);*/
+    datenow = getdatetime();
+    aktif = &common;
+    common="???????";
+    ho.Enqueue(datenow,*aktif_member,hrg_ttl,*aktif);
     break;
 
 default:
