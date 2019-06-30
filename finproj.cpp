@@ -12,23 +12,21 @@ using namespace std;
 
 bool get_adm;
 bool get_staff;
-int ds, dm, dn, dh,hrg_ttl;
+int ds=0, dm, dn, hrg_ttl;
 string *aktif=NULL, *aktif_member=NULL;
 
 struct Owner{
     string nama = "Admin@Cafe_simbok.com";
-	string oname = "gunawan";
-	string opass = "prasetyo";
+	string oname = "admin";
+	string opass = "admin";
 }owner;
 
-typedef struct Staff Staff2;
 struct Staff{
 	int id_staff;
-	string nama;
+	string snama;
 	string sname;
 	string spass;
-	Staff2 * next;
-};
+}stff[max];
 
 typedef struct Member Member2;
 struct Member{
@@ -61,135 +59,73 @@ void header();
 
 class StaffOp{
 private:
-    int a;
-    string b,c,d;
-    Staff2 *head, *tail, *hapus, *b1, *b2;
+    int hapus;
 public:
-    StaffOp(){
-    head=NULL;
-    tail=NULL;
-    }
-    void add_staff(int n, string m, string o, string p){
-        Staff2 *tmp = new Staff;
-        tmp->id_staff  = n;
-        tmp->nama = m;
-        tmp->sname = o;
-        tmp->spass = p;
-        tmp->next = NULL;
-
-        if(head == NULL)
-        {
-            head = tmp;
-            tail = tmp;
-        }
-        else
-        {
-            tail->next = tmp;
-            tail = tail->next;
+    void display(){
+        for(int i=0; i<ds;i++){
+            cout<<stff[i].id_staff<<"\t"<<stff[i].snama<<endl;
         }
     }
 
-    Staff2* gethead(){
-        return head;
-    }
-
-    static void display(Staff2 *head){
-        if(head==NULL){
-            cout<<"No More Data..."<<endl;
+    void delete_staff(int id){
+    if(ds>0){
+    for(int i=0; i<ds;i++){
+        if(stff[i].id_staff==id){
+            if(stff[i].id_staff==stff[ds].id_staff){
+              ds=ds-1;
+            }
+            else{
+                stff[i].id_staff=stff[i+1].id_staff;
+                stff[i].snama=stff[i+1].snama;
+                stff[i].sname=stff[i+1].sname;
+                stff[i].spass=stff[i+1].spass;
+                ds=ds-1;
+            }
         }
         else{
-            cout<<head->id_staff<<"\t"<<head->nama<<"\t"<<endl;
-            display(head->next);
+            cout<<"\nStaff dengan id <"<<id<<"> tidak ditemukan...";
         }
-    }
-
-    void del_front(){
-    if(head==NULL){
-        cout<<"List Kosong..!\n";
-    }
-    else if(head==tail){
-        hapus=head;
-        head=NULL;
-        tail=NULL;
-        delete hapus;
+        }
     }
     else{
-        hapus=head;
-        head=head->next;
-        delete hapus;
-    }
-    }
-
-    void del_back(){
-    if(head==NULL){
-        cout<<"List Kosong..!\n";
-    }
-    else if(head==tail){
-        hapus=head;
-        head=NULL;
-        tail==NULL;
-        delete hapus;
-    }
-    else{
-        b1=head;
-        while(b1->next!=tail)
-        {
-            b1=b1->next;
-        }
-        hapus=tail;
-        b1->next=NULL;
-        tail=b1;
-        delete hapus;
-    }
-    }
-
-    void search_stf(string username, string password){
-
-    }
-
-    void del_mid(int x){
-    Staff2 *b;
-    int ada=0;
-    b=head;
-    if(head==NULL)
-        cout<<"List Kosong..!\n";
-    else if(b->id_staff==x)
-        del_front();
-    else if(tail->id_staff==x)
-        del_back();
-    else{
-        while(b!=NULL){
-            if(b->id_staff==x){
-                ada++;
-            }
-            b=b->next;
-        }
-        cout<<b;
-        if(ada==0)
-            cout<<"\n-->Data yang dimasukkan tidak valid<--\n\n";
-        else{
-            b=head;
-            while(b->next->id_staff!=x){
-                b=b->next;
-            }
-            b1=b->next;
-            b2=b1->next;
-            hapus=b1;
-            b->next=b2;
-            delete hapus;
-        }
+        cout<<"\nTidak ada data staff...";
     }
     }
 
     void regist_staff(){
+    if(ds!=max){
     cin.ignore();
-    cout<<"\nMasukkan Nama Staff : "; getline(cin,b);
-    cout<<"\nMasukkan Username Staff : "; cin>>c;
-    cout<<"Masukkan Password Staff : "; cin>>d;
-     a = ds + 1000;
-    cout<<"\n\nStaff dengan ID "<<a<<" Telah ditambahkan..";
-    add_staff(a,b,c,d);
+    cout<<"\nMasukkan Nama Staff : "; getline(cin,stff[ds].snama);
+    cout<<"\nMasukkan Username Staff : "; cin>>stff[ds].sname;
+    cout<<"Masukkan Password Staff : "; cin>>stff[ds].spass;
+     stff[ds].id_staff = ds + 1000;
+    cout<<"\n\nStaff dengan ID "<<stff[ds].id_staff<<" Telah ditambahkan..";
     ds++;
+    }
+    else{
+        cout<<"\nKuota Staff Penuh...";
+    }
+    }
+
+    bool cari_staff(string username, string password){
+    int ketemu=0;
+    for(int i=0;i<ds;i++){
+            cout<<ds;
+        if(stff[i].sname==username && stff[i].spass==password){
+            cout<<"\n"<<ds;
+            cout<<"\n"<<ds;
+            aktif=&stff[i].snama;
+            ketemu=1;
+            get_staff=1;
+        }
+    }
+    if(ketemu==1){
+        cout<<"\n"<<ds;
+        return true;
+    }
+    else{
+        return false;
+    }
     }
 
 };
@@ -589,7 +525,6 @@ int IsEmpty(){
 int IsFull(){
     if(story.tail==max-1)
     {
-        Dequeue();
         return 1;
     }
     else
@@ -612,7 +547,16 @@ void Enqueue(string date,string buyer,int bayar,string staf){
             story.buyer[story.tail]=buyer;
             story.jml_bayar[story.tail]=bayar;
             story.kasir[story.tail]=staf;
-		}
+		} else
+        if(IsFull()==1)
+        {
+            Dequeue();
+            story.tail++;
+            story.datetime[story.tail]=date;
+            story.buyer[story.tail]=buyer;
+            story.jml_bayar[story.tail]=bayar;
+            story.kasir[story.tail]=staf;
+        }
 }
 
 void Dequeue(){
@@ -644,8 +588,7 @@ void tampil(){
 
 };
 
-string getdatetime()
-{
+string getdatetime(){
   time_t tt = time(NULL);
   string s = ctime(&tt);
   return s.substr(0, s.size()-1);
@@ -659,7 +602,6 @@ void header(){
 
 void login(){
 	int login;
-	login = 0;
     StaffOp so;
 	string username,password;
 
@@ -669,16 +611,13 @@ void login(){
 	cout<<"\nUsername\t: "; cin>>username;
 	cout<<"Password\t: "; cin>>password;
 
-
 	if(username==owner.oname && password==owner.opass){
         get_adm = 1;
         aktif=&owner.nama;
         break;
 	}
-    else if(username=="prasetyo" && password=="gunawan"){
-        get_staff=1;
-        //so.search_stf(username,password);
-        break;
+    else if(so.cari_staff(username, password)==true){
+    break;
     }
     else if(get_adm==0 && get_staff==0){
         cout<<"\n\nAnda Salah Input Username dan atau Password..!";
@@ -738,12 +677,12 @@ case '1':
         so.regist_staff();
         break;
     case '2':
-        StaffOp::display(so.gethead());
+        so.display();
         break;
     case '3':
-        StaffOp::display(so.gethead());
+        so.display();
         cout<<"\nMasukkan ID Staff yg ingin di del : "; cin>>del_id;
-        so.del_mid(del_id);
+        so.delete_staff(del_id);
         break;
     }
 
@@ -821,7 +760,7 @@ default:
     do{
     system("CLS");
 	header();
-	cout<<"Selamat Datang "<<" ..."<<endl<<endl;
+	cout<<"Selamat Datang staff <"<<*aktif<<"> ..."<<endl<<endl;
     back_stf:
 	cout<<"\nPilih Tindakan : ";
     cout<<"\n\t1. Add/Display/Delete Member";
@@ -906,8 +845,6 @@ case '3':
         cout<<"Harga Akhir :\t\tRp."<<hrg_ttl<<endl;
     }
     datenow = getdatetime();
-    aktif = &common;
-    common="???????";
     ho.Enqueue(datenow,*aktif_member,hrg_ttl,*aktif);
     break;
 
